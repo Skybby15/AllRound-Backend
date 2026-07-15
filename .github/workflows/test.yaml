@@ -65,3 +65,8 @@ jobs:
 
       - name: Check code formatting
         run: ./mvnw spotless:check -B
+      
+      - name: SonarCloud Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./mvnw sonar:sonar -Dsonar.token=${SONAR_TOKEN} -B

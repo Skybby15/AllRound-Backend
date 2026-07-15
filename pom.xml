@@ -16,6 +16,10 @@
         <quarkus.platform.version>3.37.1</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.6</surefire-plugin.version>
+
+        <sonar.organization>allround</sonar.organization>
+        <sonar.projectKey>allround</sonar.projectKey>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencyManagement>
@@ -133,7 +137,7 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
@@ -157,6 +161,12 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>5.7.0.6970</version>
             </plugin>
 
         </plugins>
