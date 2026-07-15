@@ -49,7 +49,6 @@ jobs:
         run: ./mvnw clean verify -B
 
   quality:
-    needs: test
     runs-on: ubuntu-latest
 
     steps:
@@ -72,7 +71,6 @@ jobs:
         run: ./mvnw spotless:check -B
 
   trivy:
-    needs: quality
     runs-on: ubuntu-latest
 
     steps:
