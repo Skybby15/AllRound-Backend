@@ -1,11 +1,13 @@
 package io.github.skybby15.allround.Exception;
 
-public class InvalidCredentialsException extends RuntimeException {
+public class InvalidCredentialsException extends ApiException {
+  private static String code = "INVALID_CREDENTIALS";
+
   public InvalidCredentialsException() {
-    super("Invalid email or password.");
+    super(code, "Invalid email or password.");
   }
 
   public InvalidCredentialsException(String message) {
-    super(message);
+    super(code, message);
   }
 }
