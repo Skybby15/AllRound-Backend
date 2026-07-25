@@ -1,6 +1,0 @@
-name: Deploy Project
-
-on:
-  push:
-    branches:
-      - main

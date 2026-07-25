@@ -43,3 +43,11 @@ nb-configuration.xml
 /.quarkus/cli/plugins/
 # TLS Certificates
 .certs/
+
+#VS Code extension
+.order
+TODOs.txt
+
+#jwt rsa private key
+rsaPrivateKey.pem
+privateKey.pem
