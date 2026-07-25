@@ -113,7 +113,7 @@ public class AuthenthicationResource {
     } catch (ApiException err) {
       ErrorResponse errResp = new ErrorResponse(err.getCode(), err.getMessage(), Instant.now());
       Status status;
-      if (err.getCode() == "INVALID_CREDENTIALS") status = Status.UNAUTHORIZED;
+      if ("INVALID_CREDENTIALS".equals(err.getCode())) status = Status.UNAUTHORIZED;
       else status = Status.BAD_REQUEST;
       return Response.status(status).entity(errResp).build();
     }

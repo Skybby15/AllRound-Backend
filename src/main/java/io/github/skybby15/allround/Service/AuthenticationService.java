@@ -1,7 +1,5 @@
 package io.github.skybby15.allround.Service;
 
-import de.mkammerer.argon2.Argon2;
-import de.mkammerer.argon2.Argon2Factory;
 import io.github.skybby15.allround.DTO.Authentication.AuthenticationResult;
 import io.github.skybby15.allround.DTO.Authentication.LoginRequest;
 import io.github.skybby15.allround.DTO.Authentication.RefreshTokenResponse;
@@ -12,6 +10,7 @@ import io.github.skybby15.allround.Exception.DuplicateAccKeyException;
 import io.github.skybby15.allround.Exception.InvalidCredentialsException;
 import io.github.skybby15.allround.Model.User;
 import io.github.skybby15.allround.Repository.UserRepository;
+import io.github.skybby15.allround.Util.PasswordHasher;
 import io.smallrye.jwt.auth.principal.JWTParser;
 import io.smallrye.jwt.auth.principal.ParseException;
 import io.smallrye.jwt.build.Jwt;
@@ -24,19 +23,16 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @ApplicationScoped
 public class AuthenticationService {
-  private int hashIterations = 2;
-  private int hashMemory = 65536;
-  private int hashParallelism = 1;
 
   @Inject UserRepository userRepo;
   @Inject JWTParser jwtParser;
+  @Inject PasswordHasher hasher;
 
   public AuthenticationResult loginUser(LoginRequest request) throws InvalidCredentialsException {
     User user =
         userRepo.findByEmail(request.email()).orElseThrow(() -> new InvalidCredentialsException());
 
-    Argon2 argon = Argon2Factory.create();
-    boolean valid = argon.verify(user.getPasswordHash(), request.password().toCharArray());
+    boolean valid = hasher.verifyHashedPassword(user.getPasswordHash(), request.password());
     if (!valid) throw new InvalidCredentialsException();
 
     String refreshToken =
@@ -60,9 +56,7 @@ public class AuthenticationService {
     Optional<User> nameUser = userRepo.findByUsername(request.username());
     if (nameUser.isPresent()) throw new DuplicateAccKeyException("username");
 
-    Argon2 hasher = Argon2Factory.create();
-    String hashedPassword =
-        hasher.hash(hashIterations, hashMemory, hashParallelism, request.password().toCharArray());
+    String hashedPassword = hasher.hashPassword(request.password());
 
     User newUser =
         User.builder()
