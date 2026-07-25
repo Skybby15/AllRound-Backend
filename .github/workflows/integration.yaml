@@ -39,8 +39,22 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '25'
+          java-version: "25"
           cache: maven
+
+      - name: Generate JWT key pair
+        run: |
+          mkdir -p src/main/resources/jwt
+
+          openssl genpkey \
+            -algorithm RSA \
+            -out src/main/resources/jwt/privateKey.pem \
+            -pkeyopt rsa_keygen_bits:2048
+
+          openssl rsa \
+            -pubout \
+            -in src/main/resources/jwt/privateKey.pem \
+            -out src/main/resources/jwt/rsaPublicKey.pem
 
       - name: Make Maven Wrapper executable
         run: chmod +x mvnw
@@ -61,7 +75,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '25'
+          java-version: "25"
           cache: maven
 
       - name: Make Maven Wrapper executable
@@ -79,7 +93,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '25'
+          java-version: "25"
           cache: maven
 
       # Currently scanning files only , later it can scan built docker images too
@@ -91,7 +105,7 @@ jobs:
           severity: HIGH,CRITICAL
           format: sarif
           output: trivy-results.sarif
-      
+
       - name: Upload Trivy results
         uses: github/codeql-action/upload-sarif@v3
         with:
@@ -117,7 +131,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '25'
+          java-version: "25"
           cache: maven
 
       - name: Build project
