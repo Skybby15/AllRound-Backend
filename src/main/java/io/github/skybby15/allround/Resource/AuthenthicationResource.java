@@ -23,7 +23,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
 import java.time.Instant;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -63,7 +62,7 @@ public class AuthenthicationResource {
               .httpOnly(true)
               .secure(false) // true in production (HTTPS)
               .sameSite(NewCookie.SameSite.LAX)
-              .path("/auth/refresh") // will be seen only from /auth/refresh path on browser 
+              .path("/auth/refresh") // will be seen only from /auth/refresh path on browser
               .maxAge(60 * 60 * 24 * 10)
               .build();
 
@@ -106,19 +105,16 @@ public class AuthenthicationResource {
   @POST
   @Path("/refresh")
   @PermitAll
-  public Response refresh(@CookieParam("refreshToken") String refreshToken ){
-    try{
+  public Response refresh(@CookieParam("refreshToken") String refreshToken) {
+    try {
       RefreshTokenResponse response = authService.refreshAccessToken(refreshToken);
-    
+
       return Response.ok(response).build();
-    }catch(ApiException err)
-    {
-      ErrorResponse errResp = new ErrorResponse(err.getCode(),err.getMessage(),Instant.now());
+    } catch (ApiException err) {
+      ErrorResponse errResp = new ErrorResponse(err.getCode(), err.getMessage(), Instant.now());
       Status status;
-      if(err.getCode() == "INVALID_CREDENTIALS")
-        status = Status.UNAUTHORIZED;
-      else
-        status = Status.BAD_REQUEST;
+      if (err.getCode() == "INVALID_CREDENTIALS") status = Status.UNAUTHORIZED;
+      else status = Status.BAD_REQUEST;
       return Response.status(status).entity(errResp).build();
     }
   }
