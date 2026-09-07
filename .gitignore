@@ -54,3 +54,6 @@ TODOs.txt
 #jwt rsa private key
 rsaPrivateKey.pem
 privateKey.pem
+
+#firebase
+goround-8f8aa-firebase-adminsdk-fbsvc-54a6e47802.json
