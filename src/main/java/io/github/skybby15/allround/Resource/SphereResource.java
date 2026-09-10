@@ -3,9 +3,13 @@ package io.github.skybby15.allround.Resource;
 import java.time.Instant;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import io.github.skybby15.allround.DTO.ErrorResponse;
 import io.github.skybby15.allround.DTO.Filters.SphereFilter;
+import io.github.skybby15.allround.DTO.Node.NodeTreeResponse;
 import io.github.skybby15.allround.DTO.Sphere.CreateSphereRequest;
 import io.github.skybby15.allround.DTO.Sphere.CreateSphereResponse;
 import io.github.skybby15.allround.DTO.Sphere.ListSphereResponse;
@@ -37,6 +41,15 @@ public class SphereResource {
 
     @POST
     @Authenticated 
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @APIResponse(
+      responseCode = "201",
+      description = "Sphere created successfully",
+      content =
+          @Content(
+              mediaType = MediaType.APPLICATION_JSON,
+              schema = @Schema(implementation = CreateSphereResponse.class)))
     public Response createSphere(CreateSphereRequest request) {
         try{
             Long userId = Long.valueOf(jwt.getSubject());
@@ -58,6 +71,13 @@ public class SphereResource {
 
     @GET 
     @Authenticated
+    @APIResponse(
+      responseCode = "200",
+      description = "Spheres retrieved successfully",
+      content =
+          @Content(
+              mediaType = MediaType.APPLICATION_JSON,
+              schema = @Schema(implementation = ListSphereResponse.class)))
     public Response getSpheres(@QueryParam("ownerId") Long ownerId) {
         SphereFilter filter = SphereFilter.builder()
             .ownerId(ownerId)
@@ -71,7 +91,15 @@ public class SphereResource {
     @GET 
     @Path ("/{id}/node-tree")
     @Authenticated 
+    @APIResponse(
+      responseCode = "200",
+      description = "Node tree retrieved successfully",
+      content =
+          @Content(
+              mediaType = MediaType.APPLICATION_JSON,
+              schema = @Schema(implementation = NodeTreeResponse.class)))
     public Response getNodeTreeBySphereId(@PathParam("id") Long sphereId) {
-        return Response.ok().entity(nodeService.getNodeTree(sphereId)).build();
+        NodeTreeResponse response = nodeService.getNodeTree(sphereId);
+        return Response.ok().entity(response).build();
     }
 }
