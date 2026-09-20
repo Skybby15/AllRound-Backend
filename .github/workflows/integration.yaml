@@ -15,7 +15,8 @@ jobs:
       POSTGRES_USER: postgres_test
       POSTGRES_PASSWORD: postgres_test
       POSTGRES_DB: allround_test
-
+      FIREBASE_STORAGE_BUCKET: ${{ vars.FIREBASE_STORAGE_BUCKET }}
+      
     services:
       postgres:
         image: postgres:17

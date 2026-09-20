@@ -2,6 +2,25 @@
   "openapi" : "3.1.0",
   "components" : {
     "schemas" : {
+      "CreateSphereRequest" : {
+        "type" : "object",
+        "required" : [ "name" ],
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "pattern" : "\\S"
+          }
+        }
+      },
+      "CreateSphereResponse" : {
+        "type" : "object",
+        "properties" : {
+          "sphereId" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
       "ErrorResponse" : {
         "type" : "object",
         "properties" : {
@@ -20,6 +39,17 @@
         "type" : "string",
         "format" : "date-time",
         "examples" : [ "2022-03-10T16:15:50Z" ]
+      },
+      "ListSphereResponse" : {
+        "type" : "object",
+        "properties" : {
+          "spheres" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/SphereListInfoDTO"
+            }
+          }
+        }
       },
       "LoginRequest" : {
         "type" : "object",
@@ -44,6 +74,40 @@
           }
         }
       },
+      "NodeTreeInfoDTO" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "parentId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "type" : {
+            "$ref" : "#/components/schemas/NodeType"
+          }
+        }
+      },
+      "NodeTreeResponse" : {
+        "type" : "object",
+        "properties" : {
+          "nodes" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/NodeTreeInfoDTO"
+            }
+          }
+        }
+      },
+      "NodeType" : {
+        "type" : "string",
+        "enum" : [ "FILE", "FOLDER" ]
+      },
       "SignupRequest" : {
         "type" : "object",
         "required" : [ "username", "email", "password" ],
@@ -66,6 +130,22 @@
       },
       "SignupResponse" : {
         "type" : "object"
+      },
+      "SphereListInfoDTO" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "ownerId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        }
       }
     },
     "securitySchemes" : {
@@ -116,6 +196,29 @@
           }
         },
         "summary" : "Login User",
+        "tags" : [ "Authenthication Resource" ]
+      }
+    },
+    "/auth/logout" : {
+      "post" : {
+        "parameters" : [ {
+          "name" : "refreshToken",
+          "in" : "cookie",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          }
+        },
+        "summary" : "Logout User",
         "tags" : [ "Authenthication Resource" ]
       }
     },
@@ -199,6 +302,198 @@
         },
         "summary" : "Hello",
         "tags" : [ "Greeting Resource" ]
+      }
+    },
+    "/node" : {
+      "post" : {
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "summary" : "Create Node",
+        "tags" : [ "Node Resource" ],
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/node/{id}" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "summary" : "Get Node Data",
+        "tags" : [ "Node Resource" ],
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/node/{id}/downloadUrl" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          }
+        },
+        "summary" : "Generate Download Url",
+        "tags" : [ "Node Resource" ]
+      }
+    },
+    "/sphere" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "ownerId",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Spheres retrieved successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ListSphereResponse"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "summary" : "Get Spheres",
+        "tags" : [ "Sphere Resource" ],
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      },
+      "post" : {
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateSphereRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Sphere created successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CreateSphereResponse"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "summary" : "Create Sphere",
+        "tags" : [ "Sphere Resource" ],
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
+      }
+    },
+    "/sphere/{sphereId}/node-tree" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "sphereId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Node tree retrieved successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NodeTreeResponse"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "summary" : "Get Node Tree By Sphere Id",
+        "tags" : [ "Sphere Resource" ],
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
       }
     }
   },
