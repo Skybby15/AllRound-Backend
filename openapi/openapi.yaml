@@ -215,7 +215,48 @@ paths:
       summary: Hello
       tags:
       - Greeting Resource
-  /node/download/{id}:
+  /node:
+    post:
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: {}
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      summary: Create Node
+      tags:
+      - Node Resource
+      security:
+      - SecurityScheme: []
+  /node/{id}:
+    get:
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: {}
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      summary: Get Node Data
+      tags:
+      - Node Resource
+      security:
+      - SecurityScheme: []
+  /node/{id}/downloadUrl:
     get:
       parameters:
       - name: id
@@ -281,10 +322,10 @@ paths:
       - Sphere Resource
       security:
       - SecurityScheme: []
-  /sphere/{id}/node-tree:
+  /sphere/{sphereId}/node-tree:
     get:
       parameters:
-      - name: id
+      - name: sphereId
         in: path
         required: true
         schema:

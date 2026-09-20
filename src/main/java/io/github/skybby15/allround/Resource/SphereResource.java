@@ -89,7 +89,7 @@ public class SphereResource {
     }
 
     @GET 
-    @Path ("/{id}/node-tree")
+    @Path ("/{sphereId}/node-tree")
     @Authenticated 
     @APIResponse(
       responseCode = "200",
@@ -98,7 +98,7 @@ public class SphereResource {
           @Content(
               mediaType = MediaType.APPLICATION_JSON,
               schema = @Schema(implementation = NodeTreeResponse.class)))
-    public Response getNodeTreeBySphereId(@PathParam("id") Long sphereId) {
+    public Response getNodeTreeBySphereId(@PathParam("sphereId") Long sphereId) {
         NodeTreeResponse response = nodeService.getNodeTree(sphereId);
         return Response.ok().entity(response).build();
     }
