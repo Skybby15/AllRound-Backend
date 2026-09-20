@@ -10,5 +10,4 @@ public class InvalidSphereException extends ApiException {
   public InvalidSphereException(String message) {
     super(code, message);
   }
-    
 }

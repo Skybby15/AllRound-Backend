@@ -14,32 +14,32 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path ("/node")
-@Consumes (MediaType.APPLICATION_JSON)
-@Produces (MediaType.APPLICATION_JSON)
+@Path("/node")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class NodeResource {
-    @Inject FirebaseStorageService firebaseStorageService;
-    @Inject NodeService nodeService;
+  @Inject FirebaseStorageService firebaseStorageService;
+  @Inject NodeService nodeService;
 
-    @GET 
-    @Path ("/{id}/downloadUrl")
-    @PermitAll 
-    public Response generateDownloadUrl(@PathParam("id") String storagePath) {
-        String response = firebaseStorageService.generateDownloadUrl(storagePath).toString();
-        
-        return Response.ok().entity(response).build();
-    }
+  @GET
+  @Path("/{id}/downloadUrl")
+  @PermitAll
+  public Response generateDownloadUrl(@PathParam("id") String storagePath) {
+    String response = firebaseStorageService.generateDownloadUrl(storagePath).toString();
 
-    @POST 
-    @Authenticated
-    public Response createNode(){
-        return Response.ok().build();
-    }
+    return Response.ok().entity(response).build();
+  }
 
-    @GET 
-    @Path ("/{id}")
-    @Authenticated 
-    public Response getNodeData(@PathParam("id") Long nodeId){
-        return Response.ok().build();
-    }
+  @POST
+  @Authenticated
+  public Response createNode() {
+    return Response.ok().build();
+  }
+
+  @GET
+  @Path("/{id}")
+  @Authenticated
+  public Response getNodeData(@PathParam("id") Long nodeId) {
+    return Response.ok().build();
+  }
 }

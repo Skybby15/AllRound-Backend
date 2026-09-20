@@ -73,14 +73,15 @@ public class AuthenthicationResource {
     }
   }
 
-
-  @POST 
-  @PermitAll 
+  @POST
+  @PermitAll
   @Path("/logout")
   public Response logoutUser(
-    @CookieParam("refreshToken") String refreshToken // in case i ever want to do something with it at the end , here it is the cookie 
-  ) {
-    NewCookie expiredRefreshCookie = 
+      @CookieParam("refreshToken")
+          String refreshToken // in case i ever want to do something with it at the end , here it is
+      // the cookie
+      ) {
+    NewCookie expiredRefreshCookie =
         new NewCookie.Builder("refreshToken")
             .value("")
             .httpOnly(true)
@@ -90,10 +91,7 @@ public class AuthenthicationResource {
             .maxAge(0)
             .build();
 
-    return Response
-            .noContent()
-            .cookie(expiredRefreshCookie)
-            .build();
+    return Response.noContent().cookie(expiredRefreshCookie).build();
   }
 
   @POST

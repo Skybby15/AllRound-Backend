@@ -24,36 +24,29 @@ import lombok.Setter;
 @Builder
 @Table(
     name = "nodes",
-    indexes = {
-        @Index(
-            name = "idx_nodes_sphere_parent",
-            columnList = "sphere_id, parent_node_id"
-        )
-    }
-)
+    indexes = {@Index(name = "idx_nodes_sphere_parent", columnList = "sphere_id, parent_node_id")})
 public class Node extends PanacheEntityBase {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "sphere_id", nullable = false)
-    private Sphere sphere;
+  @JoinColumn(name = "sphere_id", nullable = false)
+  private Sphere sphere;
 
   @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_node_id")
-    private Node parent;
+  @JoinColumn(name = "parent_node_id")
+  private Node parent;
 
   @NotBlank
   @Column(nullable = false)
   private String name;
 
   @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false, length = 10)
-    private NodeType type;
+  @Column(name = "type", nullable = false, length = 10)
+  private NodeType type;
 
   @NotBlank
-  @Column(name="storage_path", length = 255)
+  @Column(name = "storage_path", length = 255)
   private String storagePath;
-
 }

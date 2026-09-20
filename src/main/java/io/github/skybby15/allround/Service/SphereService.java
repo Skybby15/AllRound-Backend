@@ -1,7 +1,5 @@
 package io.github.skybby15.allround.Service;
 
-import java.util.List;
-
 import io.github.skybby15.allround.DTO.Filters.SphereFilter;
 import io.github.skybby15.allround.DTO.Sphere.CreateSphereRequest;
 import io.github.skybby15.allround.DTO.Sphere.CreateSphereResponse;
@@ -18,48 +16,43 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
+import java.util.List;
 
-@ApplicationScoped 
+@ApplicationScoped
 public class SphereService {
-    @Inject  SphereRepository sphereRepository;
-    @Inject UserRepository userRepository;
-    
-    @Transactional 
-    public CreateSphereResponse createSphere(CreateSphereRequest request, Long userId) throws ApiException {
-        User user = userRepository.findByIdOptional(userId).orElseThrow(
-            () -> new UserNotExistingException()
-        );
-        
-        Sphere newSphere = Sphere.builder()
-            .owner(user)
-            .name(request.name())
-            .build();
+  @Inject SphereRepository sphereRepository;
+  @Inject UserRepository userRepository;
 
-        try{
-            sphereRepository.persist(newSphere);
-        }catch(PersistenceException e){
-            throw new InvalidSphereException(e.getMessage());
-        }
+  @Transactional
+  public CreateSphereResponse createSphere(CreateSphereRequest request, Long userId)
+      throws ApiException {
+    User user =
+        userRepository.findByIdOptional(userId).orElseThrow(() -> new UserNotExistingException());
 
+    Sphere newSphere = Sphere.builder().owner(user).name(request.name()).build();
 
-        return CreateSphereResponse.builder()
-            .sphereId(newSphere.getId())
-            .build();
+    try {
+      sphereRepository.persist(newSphere);
+    } catch (PersistenceException e) {
+      throw new InvalidSphereException(e.getMessage());
     }
 
-    public ListSphereResponse getSpheresFiltered(SphereFilter filter){
-        
-        List<SphereListInfoDTO> spheres = sphereRepository.findByFilter(filter)
-        .stream()
-        .map(sphere -> SphereListInfoDTO.builder()
-            .id(sphere.getId())
-            .ownerId(sphere.getOwner().getId())
-            .name(sphere.getName())
-            .build()
-        ).toList();
+    return CreateSphereResponse.builder().sphereId(newSphere.getId()).build();
+  }
 
-        return ListSphereResponse.builder()
-            .spheres(spheres)
-            .build();
-    }
+  public ListSphereResponse getSpheresFiltered(SphereFilter filter) {
+
+    List<SphereListInfoDTO> spheres =
+        sphereRepository.findByFilter(filter).stream()
+            .map(
+                sphere ->
+                    SphereListInfoDTO.builder()
+                        .id(sphere.getId())
+                        .ownerId(sphere.getOwner().getId())
+                        .name(sphere.getName())
+                        .build())
+            .toList();
+
+    return ListSphereResponse.builder().spheres(spheres).build();
+  }
 }

@@ -23,23 +23,20 @@ import lombok.Setter;
 @Table(
     name = "spheres",
     uniqueConstraints = {
-        @UniqueConstraint(
-            name = "uq_spheres_owner_name",
-            columnNames = {"owner_id", "name"}
-        )
-    }
-)
+      @UniqueConstraint(
+          name = "uq_spheres_owner_name",
+          columnNames = {"owner_id", "name"})
+    })
 public class Sphere extends PanacheEntityBase {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)  
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "owner_id", nullable = false)
   private User owner;
 
   @NotBlank
   @Column(nullable = false)
   private String name;
-
 }

@@ -6,23 +6,27 @@ import io.github.skybby15.allround.Repository.NodeRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-@ApplicationScoped 
+@ApplicationScoped
 public class NodeService {
-    @Inject NodeRepository nodeRepository;
+  @Inject NodeRepository nodeRepository;
 
-    public NodeTreeResponse getNodeTree(Long sphereId) {
-        nodeRepository.findBySphereId(sphereId);
+  public NodeTreeResponse getNodeTree(Long sphereId) {
+    nodeRepository.findBySphereId(sphereId);
 
-        NodeTreeResponse response = NodeTreeResponse.builder()
-            .nodes(nodeRepository.findBySphereId(sphereId).stream().map(node -> new NodeTreeInfoDTO(
-                node.getId(),
-                node.getParent() != null ? node.getParent().getId() : null,
-                node.getName(),
-                node.getType()
-            )).toList())
+    NodeTreeResponse response =
+        NodeTreeResponse.builder()
+            .nodes(
+                nodeRepository.findBySphereId(sphereId).stream()
+                    .map(
+                        node ->
+                            new NodeTreeInfoDTO(
+                                node.getId(),
+                                node.getParent() != null ? node.getParent().getId() : null,
+                                node.getName(),
+                                node.getType()))
+                    .toList())
             .build();
 
-        return response;
-    }
-    
+    return response;
+  }
 }
