@@ -2,6 +2,22 @@
   "openapi" : "3.1.0",
   "components" : {
     "schemas" : {
+      "AddNodeRequest" : {
+        "type" : "object",
+        "properties" : {
+          "sphereId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "parentNodeId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "head" : {
+            "$ref" : "#/components/schemas/NodeAddDTO"
+          }
+        }
+      },
       "CreateSphereRequest" : {
         "type" : "object",
         "required" : [ "name" ],
@@ -74,7 +90,28 @@
           }
         }
       },
-      "NodeTreeInfoDTO" : {
+      "NodeAddDTO" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "type" : {
+            "$ref" : "#/components/schemas/NodeType"
+          },
+          "fileSize" : {
+            "type" : [ "integer", "null" ],
+            "format" : "int64"
+          },
+          "folderChildren" : {
+            "type" : [ "array", "null" ],
+            "items" : {
+              "$ref" : "#/components/schemas/NodeAddDTO"
+            }
+          }
+        }
+      },
+      "NodeTreeDTO" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -99,7 +136,7 @@
           "nodes" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/NodeTreeInfoDTO"
+              "$ref" : "#/components/schemas/NodeTreeDTO"
             }
           }
         }
@@ -306,6 +343,16 @@
     },
     "/node" : {
       "post" : {
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AddNodeRequest"
+              }
+            }
+          },
+          "required" : true
+        },
         "responses" : {
           "200" : {
             "description" : "OK",
@@ -320,6 +367,9 @@
           },
           "403" : {
             "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
           }
         },
         "summary" : "Create Node",
@@ -370,7 +420,8 @@
           "in" : "path",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "type" : "integer",
+            "format" : "int64"
           }
         } ],
         "responses" : {
@@ -381,10 +432,19 @@
                 "schema" : { }
               }
             }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
           }
         },
-        "summary" : "Generate Download Url",
-        "tags" : [ "Node Resource" ]
+        "summary" : "Get Node Download Url",
+        "tags" : [ "Node Resource" ],
+        "security" : [ {
+          "SecurityScheme" : [ ]
+        } ]
       }
     },
     "/sphere" : {

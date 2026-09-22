@@ -6,8 +6,9 @@ import io.github.skybby15.allround.DTO.Authentication.RefreshTokenResponse;
 import io.github.skybby15.allround.DTO.Authentication.SignupRequest;
 import io.github.skybby15.allround.DTO.Authentication.SignupResponse;
 import io.github.skybby15.allround.Exception.ApiException;
-import io.github.skybby15.allround.Exception.DuplicateAccKeyException;
-import io.github.skybby15.allround.Exception.InvalidCredentialsException;
+import io.github.skybby15.allround.Exception.SignupExistingKeyException;
+import io.github.skybby15.allround.Exception.LoginInvalidCredentialsException;
+import io.github.skybby15.allround.Exception.RefreshInvalidTokenException;
 import io.github.skybby15.allround.Model.User;
 import io.github.skybby15.allround.Repository.UserRepository;
 import io.github.skybby15.allround.Util.PasswordHasher;
@@ -28,12 +29,12 @@ public class AuthenticationService {
   @Inject JWTParser jwtParser;
   @Inject PasswordHasher hasher;
 
-  public AuthenticationResult loginUser(LoginRequest request) throws InvalidCredentialsException {
+  public AuthenticationResult loginUser(LoginRequest request) throws LoginInvalidCredentialsException {
     User user =
-        userRepo.findByEmail(request.email()).orElseThrow(() -> new InvalidCredentialsException());
+        userRepo.findByEmail(request.email()).orElseThrow(() -> new LoginInvalidCredentialsException());
 
     boolean valid = hasher.verifyHashedPassword(user.getPasswordHash(), request.password());
-    if (!valid) throw new InvalidCredentialsException();
+    if (!valid) throw new LoginInvalidCredentialsException();
 
     String refreshToken =
         Jwt.issuer("allround-auth")
@@ -48,13 +49,13 @@ public class AuthenticationService {
   }
 
   @Transactional
-  public SignupResponse signupUser(SignupRequest request) throws DuplicateAccKeyException {
+  public SignupResponse signupUser(SignupRequest request) throws SignupExistingKeyException {
 
     Optional<User> emailUser = userRepo.findByEmail(request.email());
-    if (emailUser.isPresent()) throw new DuplicateAccKeyException("email");
+    if (emailUser.isPresent()) throw new SignupExistingKeyException("email");
 
     Optional<User> nameUser = userRepo.findByUsername(request.username());
-    if (nameUser.isPresent()) throw new DuplicateAccKeyException("username");
+    if (nameUser.isPresent()) throw new SignupExistingKeyException("username");
 
     String hashedPassword = hasher.hashPassword(request.password());
 
@@ -97,9 +98,9 @@ public class AuthenticationService {
   }
 
   private User checkUserTokenForType(String token, String type) throws ApiException {
-    InvalidCredentialsException generalException =
-        new InvalidCredentialsException("Invalid refresh token.");
+    ApiException generalException = new RefreshInvalidTokenException();
     JsonWebToken jwt;
+
     try {
       jwt = jwtParser.parse(token);
     } catch (ParseException err) {
