@@ -1,10 +1,14 @@
 package io.github.skybby15.allround.Resource;
 
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import io.github.skybby15.allround.DTO.Node.AddNodeRequest;
 import io.github.skybby15.allround.DTO.Node.AddNodeResponse;
 import io.github.skybby15.allround.DTO.Node.NodeInfoResponse;
+import io.github.skybby15.allround.DTO.Sphere.CreateSphereResponse;
 import io.github.skybby15.allround.Service.NodeService;
 import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
@@ -36,6 +40,13 @@ public class NodeResource {
 
   @POST
   @Authenticated
+  @APIResponse(
+      responseCode = "201",
+      description = "Nodes created successfully",
+      content =
+          @Content(
+              mediaType = MediaType.APPLICATION_JSON,
+              schema = @Schema(implementation = AddNodeResponse.class)))
   public Response createNode(AddNodeRequest request) {
     Long userId = Long.valueOf(jwt.getSubject());
     AddNodeResponse response = nodeService.addNodes(request,userId);

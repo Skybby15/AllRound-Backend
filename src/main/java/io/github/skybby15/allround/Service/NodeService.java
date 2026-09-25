@@ -73,6 +73,7 @@ public class NodeService {
 
         Node entity = NodeMapper.toEntity(current.dto());
         entity.setParent(current.parent());
+        entity.setSphere(sphere);
 
         Optional<String> uploadUrl;
         if(current.dto().type() == NodeType.FILE)
