@@ -35,15 +35,10 @@ components:
           type: string
         type:
           $ref: "#/components/schemas/NodeType"
+        clientId:
+          type: string
         uploadURL:
-          type:
-          - string
-          - "null"
-        fileSize:
-          type:
-          - integer
-          - "null"
-          format: int64
+          type: string
     CreateSphereRequest:
       type: object
       required:
@@ -105,12 +100,16 @@ components:
           type: string
         type:
           $ref: "#/components/schemas/NodeType"
+        fileClientId:
+          type:
+          - string
+          - "null"
         fileSize:
           type:
           - integer
           - "null"
           format: int64
-        contentType:
+        fileContentType:
           type:
           - string
           - "null"

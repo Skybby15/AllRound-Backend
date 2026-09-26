@@ -8,7 +8,6 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import io.github.skybby15.allround.DTO.Node.AddNodeRequest;
 import io.github.skybby15.allround.DTO.Node.AddNodeResponse;
 import io.github.skybby15.allround.DTO.Node.NodeInfoResponse;
-import io.github.skybby15.allround.DTO.Sphere.CreateSphereResponse;
 import io.github.skybby15.allround.Service.NodeService;
 import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;

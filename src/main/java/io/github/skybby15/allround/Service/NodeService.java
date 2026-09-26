@@ -3,9 +3,7 @@ package io.github.skybby15.allround.Service;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Queue;
-import java.util.UUID;
 
 import io.github.skybby15.allround.DTO.Node.AddNodeRequest;
 import io.github.skybby15.allround.DTO.Node.AddNodeResponse;
@@ -53,19 +51,23 @@ public class NodeService {
         throw new AddNodeUserMissingSphereAccess();
 
     List<NodeAddDTO> heads = request.nodes();
-    Node parentNode = nodeRepository.findById(request.parentNodeId());
+    Node parentNode;
 
-    if(!parentNode.getSphere().getId().equals(request.sphereId()))
+    if(request.parentNodeId() != null)
+        parentNode = nodeRepository.findById(request.parentNodeId());
+    else
+        parentNode = null;
+
+    if(parentNode != null && !parentNode.getSphere().getId().equals(request.sphereId()))
         throw new AddNodeParentIdNotInSphereException();
 
-    List<AddedNodeDTO> addedNodes = new ArrayList<>();
+    List<AddedNodeDTO> addedFileNodes = new ArrayList<>();
     Queue<NodeToProcess> queue = new ArrayDeque<>();
     queue.addAll(
         heads.stream()
         .map((node) -> new NodeToProcess(node,parentNode))
         .toList()
     );
-        
 
     while (!queue.isEmpty()) {
 
@@ -75,34 +77,35 @@ public class NodeService {
         entity.setParent(current.parent());
         entity.setSphere(sphere);
 
-        Optional<String> uploadUrl;
+        String uploadUrl;
         if(current.dto().type() == NodeType.FILE)
         {
+            String clientId = current.dto().fileClientId().get();
+            String fileName = current.dto().name();
+
             entity.setStoragePath(
                 "users/"+ userId.toString() + 
                 "/spheres/"+ request.sphereId().toString() + 
-                "/nodes/" + UUID.randomUUID().toString()
+                "/nodes/" + clientId  + "/" + fileName
             );
 
-            uploadUrl = Optional.of(
+            uploadUrl = 
                 firebaseUtils.generateUploadUrl(
                     entity.getStoragePath(),
-                    current.dto().contentType().get()
+                    current.dto().fileContentType().get()
                 )
-                .toString()
-            );
+                .toString();
+            
+
+            AddedNodeDTO addedFileNode = NodeMapper.toAddedFileNode(entity,uploadUrl,current.dto.fileClientId().get()); 
+            addedFileNodes.add(addedFileNode);
         }
         else
         {
             entity.setStoragePath("");
-            uploadUrl = Optional.empty();
         }
 
         nodeRepository.persist(entity);
-
-        AddedNodeDTO addedNode = NodeMapper.toAddedNode(entity,uploadUrl); 
-
-        addedNodes.add(addedNode);
 
         queue.addAll(
             current.dto().folderChildren()
@@ -113,7 +116,7 @@ public class NodeService {
         );
     }
 
-    return new AddNodeResponse(addedNodes);
+    return new AddNodeResponse(addedFileNodes);
   }
 
   public NodeTreeResponse getNodeTree(Long sphereId) {

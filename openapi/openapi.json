@@ -49,12 +49,11 @@
           "type" : {
             "$ref" : "#/components/schemas/NodeType"
           },
-          "uploadURL" : {
-            "type" : [ "string", "null" ]
+          "clientId" : {
+            "type" : "string"
           },
-          "fileSize" : {
-            "type" : [ "integer", "null" ],
-            "format" : "int64"
+          "uploadURL" : {
+            "type" : "string"
           }
         }
       },
@@ -139,11 +138,14 @@
           "type" : {
             "$ref" : "#/components/schemas/NodeType"
           },
+          "fileClientId" : {
+            "type" : [ "string", "null" ]
+          },
           "fileSize" : {
             "type" : [ "integer", "null" ],
             "format" : "int64"
           },
-          "contentType" : {
+          "fileContentType" : {
             "type" : [ "string", "null" ]
           },
           "folderChildren" : {

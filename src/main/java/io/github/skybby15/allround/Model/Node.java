@@ -46,7 +46,6 @@ public class Node extends PanacheEntityBase {
   @Column(name = "type", nullable = false, length = 10)
   private NodeType type;
 
-  @NotBlank
   @Column(name = "storage_path", length = 255)
   private String storagePath;
 }
