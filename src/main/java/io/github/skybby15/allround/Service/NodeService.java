@@ -9,6 +9,7 @@ import java.util.Queue;
 import io.github.skybby15.allround.DTO.Node.AddNodeRequest;
 import io.github.skybby15.allround.DTO.Node.AddNodeResponse;
 import io.github.skybby15.allround.DTO.Node.AddedNodeDTO;
+import io.github.skybby15.allround.DTO.Node.DeleteNodeResponse;
 import io.github.skybby15.allround.DTO.Node.NodeAddDTO;
 import io.github.skybby15.allround.DTO.Node.NodeDownloadUrlResponse;
 import io.github.skybby15.allround.DTO.Node.NodeInfoResponse;
@@ -19,6 +20,9 @@ import io.github.skybby15.allround.Exception.AddNodeSphereNotFoundException;
 import io.github.skybby15.allround.Exception.AddNodeUserMissingSphereAccess;
 import io.github.skybby15.allround.Exception.AddNodeUserNotFoundException;
 import io.github.skybby15.allround.Exception.ApiException;
+import io.github.skybby15.allround.Exception.DeleteNodeNodeNotFoundException;
+import io.github.skybby15.allround.Exception.DeleteNodeUserHasNoAccessToSphere;
+import io.github.skybby15.allround.Exception.DeleteNodeUserNotFoundException;
 import io.github.skybby15.allround.Exception.GetNodeDownloadUrlNodeNotFoundException;
 import io.github.skybby15.allround.Exception.GetNodeDownloadUrlUserNoAccessToSphere;
 import io.github.skybby15.allround.Exception.GetNodeDownloadUrlUserNotFoundException;
@@ -168,5 +172,17 @@ public class NodeService {
         .build();
 
     return response;
+  }
+
+  public DeleteNodeResponse deleteNode(Long nodeId, Long userId) throws ApiException {
+    Node node = nodeRepository.findByIdOptional(nodeId).orElseThrow(() -> new DeleteNodeNodeNotFoundException());//
+    User user = userRepository.findByIdOptional(userId).orElseThrow(() -> new DeleteNodeUserNotFoundException());//
+
+    if(!node.getSphere().getOwner().getId().equals(user.getId()))
+        throw new DeleteNodeUserHasNoAccessToSphere();//
+
+    nodeRepository.delete(node); // will delete all children as well due to cascade delete
+
+    return new DeleteNodeResponse();
   }
 }

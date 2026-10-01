@@ -333,6 +333,29 @@ paths:
       - Node Resource
       security:
       - SecurityScheme: []
+    delete:
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: {}
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      summary: Delete Node
+      tags:
+      - Node Resource
+      security:
+      - SecurityScheme: []
   /node/{id}/downloadUrl:
     get:
       parameters:

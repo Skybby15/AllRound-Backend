@@ -13,6 +13,7 @@ import io.github.skybby15.allround.Service.NodeService;
 import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -73,7 +74,14 @@ public class NodeResource {
     return Response.ok().entity(response).build();
   }
 
-  //TODO : delete node (file/folder)
+  
 
-  //
+  @DELETE 
+  @Path("/{id}")
+  @Authenticated 
+  public Response deleteNode(@PathParam ("id") Long nodeId) {
+    Long userId = Long.valueOf(jwt.getSubject());
+    nodeService.deleteNode(nodeId,userId);
+    return Response.ok().build();
+  }
 }
