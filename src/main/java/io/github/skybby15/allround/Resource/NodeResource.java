@@ -7,6 +7,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import io.github.skybby15.allround.DTO.Node.AddNodeRequest;
 import io.github.skybby15.allround.DTO.Node.AddNodeResponse;
+import io.github.skybby15.allround.DTO.Node.NodeDownloadUrlResponse;
 import io.github.skybby15.allround.DTO.Node.NodeInfoResponse;
 import io.github.skybby15.allround.Service.NodeService;
 import io.quarkus.security.Authenticated;
@@ -56,8 +57,23 @@ public class NodeResource {
   @GET 
   @Path("/{id}/downloadUrl")
   @Authenticated 
+  @APIResponse(
+    responseCode = "200",
+    description = "Download url got succesfully",
+    content = 
+      @Content(
+        mediaType = MediaType.APPLICATION_JSON,
+        schema =  @Schema(implementation = NodeDownloadUrlResponse.class
+  )))
   public Response getNodeDownloadUrl(@PathParam("id") long nodeId)
   {
-    return Response.ok().build();
+    Long userId = Long.valueOf(jwt.getSubject());
+    NodeDownloadUrlResponse response = nodeService.getNodeDownloadUrl(nodeId,userId);
+
+    return Response.ok().entity(response).build();
   }
+
+  //TODO : delete node (file/folder)
+
+  //
 }

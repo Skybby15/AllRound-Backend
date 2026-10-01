@@ -156,6 +156,14 @@
           }
         }
       },
+      "NodeDownloadUrlResponse" : {
+        "type" : "object",
+        "properties" : {
+          "downloadUrl" : {
+            "type" : "string"
+          }
+        }
+      },
       "NodeTreeDTO" : {
         "type" : "object",
         "properties" : {
@@ -473,10 +481,12 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "OK",
+            "description" : "Download url got succesfully",
             "content" : {
               "application/json" : {
-                "schema" : { }
+                "schema" : {
+                  "$ref" : "#/components/schemas/NodeDownloadUrlResponse"
+                }
               }
             }
           },

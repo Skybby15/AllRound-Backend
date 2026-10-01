@@ -1,5 +1,6 @@
 package io.github.skybby15.allround.Service;
 
+import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import io.github.skybby15.allround.DTO.Node.AddNodeRequest;
 import io.github.skybby15.allround.DTO.Node.AddNodeResponse;
 import io.github.skybby15.allround.DTO.Node.AddedNodeDTO;
 import io.github.skybby15.allround.DTO.Node.NodeAddDTO;
+import io.github.skybby15.allround.DTO.Node.NodeDownloadUrlResponse;
 import io.github.skybby15.allround.DTO.Node.NodeInfoResponse;
 import io.github.skybby15.allround.DTO.Node.NodeTreeDTO;
 import io.github.skybby15.allround.DTO.Node.NodeTreeResponse;
@@ -17,6 +19,9 @@ import io.github.skybby15.allround.Exception.AddNodeSphereNotFoundException;
 import io.github.skybby15.allround.Exception.AddNodeUserMissingSphereAccess;
 import io.github.skybby15.allround.Exception.AddNodeUserNotFoundException;
 import io.github.skybby15.allround.Exception.ApiException;
+import io.github.skybby15.allround.Exception.GetNodeDownloadUrlNodeNotFoundException;
+import io.github.skybby15.allround.Exception.GetNodeDownloadUrlUserNoAccessToSphere;
+import io.github.skybby15.allround.Exception.GetNodeDownloadUrlUserNotFoundException;
 import io.github.skybby15.allround.Model.Node;
 import io.github.skybby15.allround.Model.NodeType;
 import io.github.skybby15.allround.Model.Sphere;
@@ -118,6 +123,21 @@ public class NodeService {
 
     return new AddNodeResponse(addedFileNodes);
   }
+
+  @Transactional 
+  public NodeDownloadUrlResponse getNodeDownloadUrl(long nodeId, long userId) throws ApiException
+  {
+    Node node = nodeRepository.findByIdOptional(nodeId).orElseThrow(() -> new GetNodeDownloadUrlNodeNotFoundException());
+    User user = userRepository.findByIdOptional(userId).orElseThrow(() -> new GetNodeDownloadUrlUserNotFoundException());
+
+    if(!node.getSphere().getOwner().getId().equals(user.getId()))
+        throw new GetNodeDownloadUrlUserNoAccessToSphere();
+
+    URL url = firebaseUtils.generateDownloadUrl(node.getStoragePath());
+
+    return new NodeDownloadUrlResponse(url.toString());
+  }
+
 
   public NodeTreeResponse getNodeTree(Long sphereId) {
     NodeTreeResponse response =

@@ -119,6 +119,11 @@ components:
           - "null"
           items:
             $ref: "#/components/schemas/NodeAddDTO"
+    NodeDownloadUrlResponse:
+      type: object
+      properties:
+        downloadUrl:
+          type: string
     NodeTreeDTO:
       type: object
       properties:
@@ -339,10 +344,11 @@ paths:
           format: int64
       responses:
         "200":
-          description: OK
+          description: Download url got succesfully
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: "#/components/schemas/NodeDownloadUrlResponse"
         "401":
           description: Not Authorized
         "403":
