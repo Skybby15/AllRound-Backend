@@ -174,6 +174,7 @@ public class NodeService {
     return response;
   }
 
+  @Transactional
   public DeleteNodeResponse deleteNode(Long nodeId, Long userId) throws ApiException {
     Node node = nodeRepository.findByIdOptional(nodeId).orElseThrow(() -> new DeleteNodeNodeNotFoundException());//
     User user = userRepository.findByIdOptional(userId).orElseThrow(() -> new DeleteNodeUserNotFoundException());//
@@ -181,20 +182,9 @@ public class NodeService {
     if(!node.getSphere().getOwner().getId().equals(user.getId()))
         throw new DeleteNodeUserHasNoAccessToSphere();//
     
-    
-    Queue<Node> queue = new ArrayDeque<>();
-    queue.add(node);
+    List<String> subtree = nodeRepository.findSubtreePathsForDeletion(nodeId);
+    firebaseUtils.deleteFiles(subtree);
 
-    while(!queue.isEmpty())
-    {
-        Node current = queue.poll();
-
-        List<Node> children = nodeRepository.findByParentId(current.getId());
-        queue.addAll(children);
-        if(current.getType() == NodeType.FILE)
-            firebaseUtils.deleteFile(current.getStoragePath());
-    }
-    
     nodeRepository.delete(node); 
 
     return new DeleteNodeResponse();

@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Cors;
@@ -78,8 +79,12 @@ public class FirebaseStorageUtils {
       );
   }
 
-  public void deleteFile(String storagePath){
-    storage.delete(bucketName, storagePath);
+  public void deleteFiles(List<String> storagePaths) {
+    List<BlobId> blobIds = storagePaths.stream()
+        .map(path -> BlobId.of(bucketName, path))
+        .toList();
+
+    storage.delete(blobIds);
   }
 
 }
