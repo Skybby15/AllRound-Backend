@@ -61,20 +61,25 @@ public class FirebaseStorageUtils {
 
   public URL generateUploadUrl(String storagePath, String contentType) {
 
-        BlobInfo blobInfo = BlobInfo.newBuilder(
-            bucketName,
-            storagePath
-        )
-        .setContentType(contentType)
-        .build();
+      BlobInfo blobInfo = BlobInfo.newBuilder(
+          bucketName,
+          storagePath
+      )
+      .setContentType(contentType)
+      .build();
 
-        return storage.signUrl(
-            blobInfo,
-            15,
-            TimeUnit.MINUTES,
-            Storage.SignUrlOption.withV4Signature(),
-            Storage.SignUrlOption.httpMethod(HttpMethod.PUT),
-            Storage.SignUrlOption.withContentType()
-        );
-    }
+      return storage.signUrl(
+          blobInfo,
+          15,
+          TimeUnit.MINUTES,
+          Storage.SignUrlOption.withV4Signature(),
+          Storage.SignUrlOption.httpMethod(HttpMethod.PUT),
+          Storage.SignUrlOption.withContentType()
+      );
+  }
+
+  public void deleteFile(String storagePath){
+    storage.delete(bucketName, storagePath);
+  }
+
 }

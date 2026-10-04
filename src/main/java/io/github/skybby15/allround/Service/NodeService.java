@@ -180,8 +180,22 @@ public class NodeService {
 
     if(!node.getSphere().getOwner().getId().equals(user.getId()))
         throw new DeleteNodeUserHasNoAccessToSphere();//
+    
+    
+    Queue<Node> queue = new ArrayDeque<>();
+    queue.add(node);
 
-    nodeRepository.delete(node); // will delete all children as well due to cascade delete
+    while(!queue.isEmpty())
+    {
+        Node current = queue.poll();
+
+        List<Node> children = nodeRepository.findByParentId(current.getId());
+        queue.addAll(children);
+        if(current.getType() == NodeType.FILE)
+            firebaseUtils.deleteFile(current.getStoragePath());
+    }
+    
+    nodeRepository.delete(node); 
 
     return new DeleteNodeResponse();
   }

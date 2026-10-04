@@ -10,4 +10,8 @@ public class NodeRepository implements PanacheRepository<Node> {
   public List<Node> findBySphereId(Long sphereId) {
     return list("sphere.id", sphereId);
   }
+
+  public List<Node> findByParentId(Long parentId) {
+    return list("parent.id", parentId);
+  }
 }
