@@ -1,13 +1,13 @@
 package io.github.skybby15.allround.Service;
 
 import io.github.skybby15.allround.DTO.Filters.SphereFilter;
-import io.github.skybby15.allround.DTO.Sphere.CreateSphereRequest;
-import io.github.skybby15.allround.DTO.Sphere.CreateSphereResponse;
-import io.github.skybby15.allround.DTO.Sphere.ListSphereResponse;
-import io.github.skybby15.allround.DTO.Sphere.SphereListInfoDTO;
+import io.github.skybby15.allround.DTO.Sphere.Create.CreateSphereRequest;
+import io.github.skybby15.allround.DTO.Sphere.Create.CreateSphereResponse;
+import io.github.skybby15.allround.DTO.Sphere.List.ListSphereResponse;
+import io.github.skybby15.allround.DTO.Sphere.List.SphereListInfoDTO;
 import io.github.skybby15.allround.Exception.ApiException;
-import io.github.skybby15.allround.Exception.CreateSphereInvalidSphereException;
-import io.github.skybby15.allround.Exception.CreateSphereUserNotFoundException;
+import io.github.skybby15.allround.Exception.CreateSphere.CreateSphereInvalidSphereException;
+import io.github.skybby15.allround.Exception.CreateSphere.CreateSphereUserNotFoundException;
 import io.github.skybby15.allround.Model.Sphere;
 import io.github.skybby15.allround.Model.User;
 import io.github.skybby15.allround.Repository.SphereRepository;

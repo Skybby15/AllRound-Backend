@@ -1,7 +1,7 @@
 package io.github.skybby15.allround.Util.Mappers;
 
-import io.github.skybby15.allround.DTO.Node.AddedNodeDTO;
-import io.github.skybby15.allround.DTO.Node.NodeAddDTO;
+import io.github.skybby15.allround.DTO.Node.Add.AddedNodeDTO;
+import io.github.skybby15.allround.DTO.Node.Add.NodeAddDTO;
 import io.github.skybby15.allround.Model.Node;
 
 public final class NodeMapper {

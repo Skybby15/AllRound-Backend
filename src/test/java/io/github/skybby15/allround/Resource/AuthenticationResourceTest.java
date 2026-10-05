@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import io.github.skybby15.allround.DTO.Authentication.LoginRequest;
-import io.github.skybby15.allround.DTO.Authentication.SignupRequest;
+import io.github.skybby15.allround.DTO.Authentication.Login.LoginRequest;
+import io.github.skybby15.allround.DTO.Authentication.Signup.SignupRequest;
 import io.github.skybby15.allround.Model.User;
 import io.github.skybby15.allround.Repository.UserRepository;
 import io.github.skybby15.allround.Util.PasswordHasher;

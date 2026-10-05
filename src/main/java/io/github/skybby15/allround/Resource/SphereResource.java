@@ -1,10 +1,10 @@
 package io.github.skybby15.allround.Resource;
 
 import io.github.skybby15.allround.DTO.Filters.SphereFilter;
-import io.github.skybby15.allround.DTO.Node.NodeTreeResponse;
-import io.github.skybby15.allround.DTO.Sphere.CreateSphereRequest;
-import io.github.skybby15.allround.DTO.Sphere.CreateSphereResponse;
-import io.github.skybby15.allround.DTO.Sphere.ListSphereResponse;
+import io.github.skybby15.allround.DTO.Node.Tree.NodeTreeResponse;
+import io.github.skybby15.allround.DTO.Sphere.Create.CreateSphereRequest;
+import io.github.skybby15.allround.DTO.Sphere.Create.CreateSphereResponse;
+import io.github.skybby15.allround.DTO.Sphere.List.ListSphereResponse;
 import io.github.skybby15.allround.Service.NodeService;
 import io.github.skybby15.allround.Service.SphereService;
 import io.quarkus.security.Authenticated;
