@@ -1,9 +1,9 @@
 package io.github.skybby15.allround.Resource;
 
 import io.github.skybby15.allround.DTO.Authentication.AuthenticationResult;
-import io.github.skybby15.allround.DTO.Authentication.RefreshTokenResponse;
 import io.github.skybby15.allround.DTO.Authentication.Login.LoginRequest;
 import io.github.skybby15.allround.DTO.Authentication.Login.LoginResponse;
+import io.github.skybby15.allround.DTO.Authentication.RefreshTokenResponse;
 import io.github.skybby15.allround.DTO.Authentication.Signup.SignupRequest;
 import io.github.skybby15.allround.DTO.Authentication.Signup.SignupResponse;
 import io.github.skybby15.allround.DTO.ErrorResponse;

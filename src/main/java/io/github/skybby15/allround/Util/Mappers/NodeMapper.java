@@ -5,26 +5,21 @@ import io.github.skybby15.allround.DTO.Node.Add.NodeAddDTO;
 import io.github.skybby15.allround.Model.Node;
 
 public final class NodeMapper {
-    
-    public static Node toEntity(NodeAddDTO addDto){
-        Node mapped = Node.builder()
-            .name(addDto.name())
-            .type(addDto.type())
-            .build();
 
-        return mapped;
-    }
+  public static Node toEntity(NodeAddDTO addDto) {
+    Node mapped = Node.builder().name(addDto.name()).type(addDto.type()).build();
 
-    public static AddedNodeDTO toAddedFileNode(Node entity,String uploadUrl,String clientId)
-    {
-        Long parentId;
+    return mapped;
+  }
 
-        if(entity.getParent() != null)
-            parentId = entity.getParent().getId();
-        else
-            parentId = null;
+  public static AddedNodeDTO toAddedFileNode(Node entity, String uploadUrl, String clientId) {
+    Long parentId;
 
-        AddedNodeDTO mapped = AddedNodeDTO.builder()
+    if (entity.getParent() != null) parentId = entity.getParent().getId();
+    else parentId = null;
+
+    AddedNodeDTO mapped =
+        AddedNodeDTO.builder()
             .id(entity.getId())
             .parentId(parentId)
             .name(entity.getName())
@@ -33,6 +28,6 @@ public final class NodeMapper {
             .uploadURL(uploadUrl)
             .build();
 
-        return mapped;
-    }
+    return mapped;
+  }
 }

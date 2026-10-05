@@ -1,11 +1,5 @@
 package io.github.skybby15.allround.Util;
 
-import java.net.URL;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Bucket;
@@ -13,44 +7,37 @@ import com.google.cloud.storage.Cors;
 import com.google.cloud.storage.HttpMethod;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
-
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
+import java.net.URL;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-@ApplicationScoped 
+@ApplicationScoped
 public class FirebaseStorageUtils {
-    @ConfigProperty (name = "firebase.storage.bucket")
-    String bucketName;
+  @ConfigProperty(name = "firebase.storage.bucket")
+  String bucketName;
 
-    private final Storage storage;
+  private final Storage storage;
 
   public FirebaseStorageUtils() {
     this.storage = StorageOptions.getDefaultInstance().getService();
   }
 
-  @PostConstruct 
+  @PostConstruct
   void configure() {
     Bucket bucket = storage.get(bucketName);
 
-    Cors cors = Cors.newBuilder()
+    Cors cors =
+        Cors.newBuilder()
             .setOrigins(List.of(Cors.Origin.of("http://localhost:3000")))
-            .setMethods(List.of(
-              HttpMethod.GET,
-              HttpMethod.PUT,
-              HttpMethod.POST,
-              HttpMethod.HEAD
-            ))
-            .setResponseHeaders(List.of(
-                    "Content-Type",
-                    "Content-Length"
-            ))
+            .setMethods(List.of(HttpMethod.GET, HttpMethod.PUT, HttpMethod.POST, HttpMethod.HEAD))
+            .setResponseHeaders(List.of("Content-Type", "Content-Length"))
             .setMaxAgeSeconds(3600)
             .build();
 
-    bucket.toBuilder()
-            .setCors(List.of(cors))
-            .build()
-            .update();
+    bucket.toBuilder().setCors(List.of(cors)).build().update();
   }
 
   public URL generateDownloadUrl(String storagePath) {
@@ -62,29 +49,21 @@ public class FirebaseStorageUtils {
 
   public URL generateUploadUrl(String storagePath, String contentType) {
 
-      BlobInfo blobInfo = BlobInfo.newBuilder(
-          bucketName,
-          storagePath
-      )
-      .setContentType(contentType)
-      .build();
+    BlobInfo blobInfo =
+        BlobInfo.newBuilder(bucketName, storagePath).setContentType(contentType).build();
 
-      return storage.signUrl(
-          blobInfo,
-          15,
-          TimeUnit.MINUTES,
-          Storage.SignUrlOption.withV4Signature(),
-          Storage.SignUrlOption.httpMethod(HttpMethod.PUT),
-          Storage.SignUrlOption.withContentType()
-      );
+    return storage.signUrl(
+        blobInfo,
+        15,
+        TimeUnit.MINUTES,
+        Storage.SignUrlOption.withV4Signature(),
+        Storage.SignUrlOption.httpMethod(HttpMethod.PUT),
+        Storage.SignUrlOption.withContentType());
   }
 
   public void deleteFiles(List<String> storagePaths) {
-    List<BlobId> blobIds = storagePaths.stream()
-        .map(path -> BlobId.of(bucketName, path))
-        .toList();
+    List<BlobId> blobIds = storagePaths.stream().map(path -> BlobId.of(bucketName, path)).toList();
 
     storage.delete(blobIds);
   }
-
 }

@@ -27,7 +27,9 @@ public class SphereService {
   public CreateSphereResponse createSphere(CreateSphereRequest request, Long userId)
       throws ApiException {
     User user =
-        userRepository.findByIdOptional(userId).orElseThrow(() -> new CreateSphereUserNotFoundException());
+        userRepository
+            .findByIdOptional(userId)
+            .orElseThrow(() -> new CreateSphereUserNotFoundException());
 
     Sphere newSphere = Sphere.builder().owner(user).name(request.name()).build();
 

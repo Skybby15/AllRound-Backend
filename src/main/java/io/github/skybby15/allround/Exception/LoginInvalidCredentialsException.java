@@ -6,10 +6,6 @@ public class LoginInvalidCredentialsException extends ApiException {
   private static String code = "INVALID_CREDENTIALS";
 
   public LoginInvalidCredentialsException() {
-    super(
-      Status.UNAUTHORIZED,
-      code, 
-      "Invalid email or password."
-    );
+    super(Status.UNAUTHORIZED, code, "Invalid email or password.");
   }
 }

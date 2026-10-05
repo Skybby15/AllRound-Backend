@@ -9,12 +9,14 @@ import java.util.List;
 public class NodeRepository implements PanacheRepository<Node> {
   public List<Node> findBySphereId(Long sphereId) {
     return list("sphere.id", sphereId);
-  } 
+  }
 
   public List<String> findSubtreePathsForDeletion(Long nodeId) {
     @SuppressWarnings("unchecked")
-    List<String> results = getEntityManager()
-        .createNativeQuery("""
+    List<String> results =
+        getEntityManager()
+            .createNativeQuery(
+                """
             WITH RECURSIVE subtree AS (
                 SELECT id, storage_path
                 FROM nodes
@@ -31,8 +33,8 @@ public class NodeRepository implements PanacheRepository<Node> {
             WHERE storage_path IS NOT NULL
               AND storage_path <> ''
             """)
-        .setParameter("nodeId", nodeId)
-        .getResultList();
+            .setParameter("nodeId", nodeId)
+            .getResultList();
 
     return results;
   }

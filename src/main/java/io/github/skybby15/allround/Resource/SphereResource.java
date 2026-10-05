@@ -43,10 +43,10 @@ public class SphereResource {
               mediaType = MediaType.APPLICATION_JSON,
               schema = @Schema(implementation = CreateSphereResponse.class)))
   public Response createSphere(CreateSphereRequest request) {
-      Long userId = Long.valueOf(jwt.getSubject());
+    Long userId = Long.valueOf(jwt.getSubject());
 
-      CreateSphereResponse response = sphereService.createSphere(request, userId);
-      return Response.status(Response.Status.CREATED).entity(response).build();
+    CreateSphereResponse response = sphereService.createSphere(request, userId);
+    return Response.status(Response.Status.CREATED).entity(response).build();
   }
 
   @GET

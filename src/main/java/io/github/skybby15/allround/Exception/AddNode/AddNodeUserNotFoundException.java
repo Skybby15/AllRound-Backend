@@ -1,7 +1,7 @@
 package io.github.skybby15.allround.Exception.AddNode;
 
 import io.github.skybby15.allround.Exception.ApiException;
-import jakarta.ws.rs.core.Response.Status;;
+import jakarta.ws.rs.core.Response.Status;
 
 public class AddNodeUserNotFoundException extends ApiException {
   private static String code = "USER_NOT_FOUND";

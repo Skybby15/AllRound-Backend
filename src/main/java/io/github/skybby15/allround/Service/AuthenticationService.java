@@ -1,14 +1,14 @@
 package io.github.skybby15.allround.Service;
 
 import io.github.skybby15.allround.DTO.Authentication.AuthenticationResult;
-import io.github.skybby15.allround.DTO.Authentication.RefreshTokenResponse;
 import io.github.skybby15.allround.DTO.Authentication.Login.LoginRequest;
+import io.github.skybby15.allround.DTO.Authentication.RefreshTokenResponse;
 import io.github.skybby15.allround.DTO.Authentication.Signup.SignupRequest;
 import io.github.skybby15.allround.DTO.Authentication.Signup.SignupResponse;
 import io.github.skybby15.allround.Exception.ApiException;
-import io.github.skybby15.allround.Exception.SignupExistingKeyException;
 import io.github.skybby15.allround.Exception.LoginInvalidCredentialsException;
 import io.github.skybby15.allround.Exception.RefreshInvalidTokenException;
+import io.github.skybby15.allround.Exception.SignupExistingKeyException;
 import io.github.skybby15.allround.Model.User;
 import io.github.skybby15.allround.Repository.UserRepository;
 import io.github.skybby15.allround.Util.PasswordHasher;
@@ -29,9 +29,12 @@ public class AuthenticationService {
   @Inject JWTParser jwtParser;
   @Inject PasswordHasher hasher;
 
-  public AuthenticationResult loginUser(LoginRequest request) throws LoginInvalidCredentialsException {
+  public AuthenticationResult loginUser(LoginRequest request)
+      throws LoginInvalidCredentialsException {
     User user =
-        userRepo.findByEmail(request.email()).orElseThrow(() -> new LoginInvalidCredentialsException());
+        userRepo
+            .findByEmail(request.email())
+            .orElseThrow(() -> new LoginInvalidCredentialsException());
 
     boolean valid = hasher.verifyHashedPassword(user.getPasswordHash(), request.password());
     if (!valid) throw new LoginInvalidCredentialsException();

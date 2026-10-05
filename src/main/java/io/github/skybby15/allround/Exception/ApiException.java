@@ -8,13 +8,9 @@ public class ApiException extends RuntimeException {
   private Status status;
   private String code;
 
-  protected ApiException(
-      Status status,
-      String code,
-      String message
-    ) {
-      super(message);
-      this.code = code;
-      this.status = status;
-    }
+  protected ApiException(Status status, String code, String message) {
+    super(message);
+    this.code = code;
+    this.status = status;
+  }
 }
