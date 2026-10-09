@@ -171,17 +171,18 @@ public class NodeService {
     Node node =
         nodeRepository
             .findByIdOptional(nodeId)
-            .orElseThrow(() -> new DeleteNodeNodeNotFoundException()); //
+            .orElseThrow(() -> new DeleteNodeNodeNotFoundException());
     User user =
         userRepository
             .findByIdOptional(userId)
-            .orElseThrow(() -> new DeleteNodeUserNotFoundException()); //
+            .orElseThrow(() -> new DeleteNodeUserNotFoundException()); 
 
     if (!node.getSphere().getOwner().getId().equals(user.getId()))
-      throw new DeleteNodeUserHasNoAccessToSphere(); //
+      throw new DeleteNodeUserHasNoAccessToSphere(); 
 
     List<String> subtree = nodeRepository.findSubtreePathsForDeletion(nodeId);
-    firebaseUtils.deleteFiles(subtree);
+    if(subtree.size() > 0)
+        firebaseUtils.deleteFiles(subtree);
 
     nodeRepository.delete(node);
 
